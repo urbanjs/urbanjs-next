@@ -1,0 +1,31 @@
+{
+  "private": true,
+  "license": "MIT",
+  "author": "Tamas Magedli <tamas.magedli@gmail.com>",
+  "homepage": "https://github.com/urbanjs/urbanjs-next",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/urbanjs/urbanjs-next"
+  },
+  "scripts": {
+    "pre-release": "lerna bootstrap && lerna run pre-release"
+  },
+  "devDependencies": {
+    "@types/mocha": "*",
+    "@types/node": "*",
+    "gulp": "^3.9.1",
+    "lerna": "^2.5.1",
+    "urbanjs-tool-babel": "^1.1.0",
+    "urbanjs-tool-check-dependencies": "^1.1.0",
+    "urbanjs-tool-check-file-names": "^1.1.0",
+    "urbanjs-tool-conventional-changelog": "^1.1.0",
+    "urbanjs-tool-mocha": "^1.1.0",
+    "urbanjs-tool-nsp": "^1.1.0",
+    "urbanjs-tool-retire": "^1.1.0",
+    "urbanjs-tool-tslint": "^1.1.0",
+    "urbanjs-tools": "^2.1.0"
+  },
+  "workspaces": [
+    "packages/*"
+  ]
+}

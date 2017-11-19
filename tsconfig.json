@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "lib": [
+      "ES5",
+      "ES2015.Promise",
+      "ES2015.Core"
+    ],
+    "types": [
+      "node",
+      "mocha"
+    ],
+    "strict": true,
+    "noUnusedLocals": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": [
+    "packages/**/src/**/*",
+    "packages/**/examples/**/*"
+  ]
+}

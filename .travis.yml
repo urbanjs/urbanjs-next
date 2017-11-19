@@ -1,0 +1,16 @@
+language: node_js
+
+sudo: false
+
+node_js:
+  - '9'
+  - '8' # LTS - December 2019
+  - '6' # LTS - April 2019
+  - '4' # LTS - April 2018
+
+cache:
+  directories:
+    - node_modules
+
+script:
+  - yarn pre-release
