@@ -1,0 +1,29 @@
+{
+  "name": "urbanjs-next",
+  "version": "0.1.0",
+  "license": "MIT",
+  "description": "An extended push system over Promise and Observable",
+  "keywords": [
+    "Promise",
+    "Deferred",
+    "RxJS",
+    "Observable",
+    "Subject",
+    "async",
+    "job",
+    "task",
+    "push system",
+    "chain of responsibility",
+    "middleware"
+  ],
+  "author": "Tamas Magedli <tamas.magedli@gmail.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/urbanjs/urbanjs-next/tree/package/next/packages/urbanjs-next"
+  },
+  "main": "./dist",
+  "typings": "./dist/index.d.ts",
+  "scripts": {
+    "pre-release": "gulp pre-release && gulp test-e2e"
+  }
+}

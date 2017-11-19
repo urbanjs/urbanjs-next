@@ -1,12 +1,5 @@
 {
   "private": true,
-  "license": "MIT",
-  "author": "Tamas Magedli <tamas.magedli@gmail.com>",
-  "homepage": "https://github.com/urbanjs/urbanjs-next",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/urbanjs/urbanjs-next"
-  },
   "scripts": {
     "pre-release": "lerna bootstrap && lerna run pre-release"
   },
