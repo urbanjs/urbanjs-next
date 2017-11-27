@@ -1,3 +1,6 @@
+/** @module NextOverPromise */
+
+/** @hidden */
 import { Deferred } from './utils';
 import {
   Next,
@@ -10,13 +13,13 @@ import {
 /**
  * Belongs to {@link NextOverPromise} class, internally used.
  */
-export type NextOverPromiseOperator<TInput, TResult> = (receiver: NextReceiver<TInput>, promise: Promise<TInput>) => Promise<TResult>;
+export type Operator<TInput, TResult> = (receiver: NextReceiver<TInput>, promise: Promise<TInput>) => Promise<TResult>;
 
 /**
  * Next implementation using Promises.
  */
 export class NextOverPromise<T = any> implements Next<T> {
-  protected operator: NextOverPromiseOperator<T, any>;
+  protected operator: Operator<T, any>;
   protected hasReceiver: boolean = false;
   protected nextReceiverDeferred = new Deferred<NextReceiver<T>>();
 
@@ -103,7 +106,7 @@ export class NextOverPromise<T = any> implements Next<T> {
    *
    * Used by {@link NextOverPromise.chain}.
    */
-  protected lift<R>(operator: NextOverPromiseOperator<T, R>): this {
+  protected lift<R>(operator: Operator<T, R>): this {
     // create new instance from the top-most prototype
     // to support derived classes
     const clone: this = Object.create(Object.getPrototypeOf(this));

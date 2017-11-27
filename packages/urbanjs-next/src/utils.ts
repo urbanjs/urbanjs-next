@@ -1,3 +1,5 @@
+/** @module Next */
+
 /** @hidden */
 export const noop = () => null;
 

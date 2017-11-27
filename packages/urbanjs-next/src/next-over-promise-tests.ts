@@ -1,5 +1,5 @@
 import * as expect from 'assert';
-import { NextOverPromise, NextOverPromiseOperator } from './next-over-promise';
+import { NextOverPromise, Operator } from './next-over-promise';
 import { spy, SinonSpy } from 'sinon';
 import { Observer } from './types';
 import { Deferred } from './utils';
@@ -227,7 +227,7 @@ describe('unit tests', () => {
               return 1;
             }
 
-            public lift<R>(operator: NextOverPromiseOperator<T, R>): this {
+            public lift<R>(operator: Operator<T, R>): this {
               return super.lift(operator);
             }
           }

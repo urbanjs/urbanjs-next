@@ -1,3 +1,5 @@
+/** @module Next */
+
 /**
  * @see {@link https://github.com/tc39/proposal-observable#observer}
  */
