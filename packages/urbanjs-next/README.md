@@ -74,6 +74,13 @@ const flow = controller(request, console.log.bind(console);
 flow.produce(receiver);
 ```
 
+Please check [api documentation](https://github.com/urbanjs/urbanjs-next/tree/master/packages/urbanjs-next/help) for implementation details and
+[examples](https://github.com/urbanjs/urbanjs-next/tree/master/packages/urbanjs-next/examples) for real use cases.
+
+Also check unit tests for requirements:
+- [`Next` over `Promise` (single value)](https://github.com/urbanjs/urbanjs-next/blob/master/packages/urbanjs-next/src/next-over-promise-tests.ts)
+- **[in progress]** - `Next` over `RxJS` (multiple value)
+
 ### Where does the name `Next` come from?
 > There are only two hard things in Computer Science: cache invalidation and naming things. - Phil Karlton
 
