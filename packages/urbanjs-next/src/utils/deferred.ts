@@ -1,7 +1,7 @@
-/** @module Next */
+/** @module Deferred */
 
 /** @hidden */
-export const noop = () => null;
+import { noop } from './noop';
 
 /**
  * @see {@link https://developer.mozilla.org/en-US/docs/Mozilla/JavaScript_code_modules/Promise.jsm/Deferred}
@@ -44,7 +44,7 @@ export class Deferred<T> {
    * Handles internal logs.
    * @desc Might be overridden.
    */
-  protected log(...args: any[]) {
+  protected log(...args: any[]): void {
     // no-op by default
   }
 }

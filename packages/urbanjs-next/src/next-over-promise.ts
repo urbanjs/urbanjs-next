@@ -92,7 +92,7 @@ export class NextOverPromise<T = any> implements Next<T> {
 
   /**
    * Returns a new instance which
-   * multicasts its end result among the registed consumers.
+   * multicasts its end result among the registered consumers.
    *
    * This method returns a clone of the original instance
    * whose methods do not take effect on the original instance.
@@ -204,7 +204,7 @@ export class NextOverPromise<T = any> implements Next<T> {
    * Handles internal logs.
    * @desc Might be overridden.
    */
-  protected log(...args: any[]) {
+  protected log(...args: any[]): void {
     // no-op by default
   }
 }

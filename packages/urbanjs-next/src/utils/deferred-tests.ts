@@ -1,6 +1,6 @@
 import * as expect from 'assert';
 import { SinonSpy, spy } from 'sinon';
-import { Deferred } from './utils';
+import { Deferred } from './deferred';
 
 describe('unit tests', () => {
   describe('Deferred', () => {
