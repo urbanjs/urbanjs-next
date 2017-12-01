@@ -22,6 +22,7 @@ export class NextOverPromise<T = any> implements Next<T> {
   protected operator: Operator<T, any>;
   protected hasReceiver: boolean = false;
   protected nextReceiverDeferred = new Deferred<NextReceiver<T>>();
+  protected sharedResultPromise: Promise<T>;
 
   /**
    * Starts a new execution of this instance and returns a promise
@@ -34,10 +35,16 @@ export class NextOverPromise<T = any> implements Next<T> {
    * @see {@link NextOverPromise.produce}
    */
   public async toPromise(): Promise<T> {
+    if (this.sharedResultPromise) {
+      return this.sharedResultPromise;
+    }
+
     const closedDeferred = new Deferred<null>();
 
+    const nextReceiver = await this.nextReceiverDeferred.promise;
+
     const result = await this.produceNext(
-      await this.nextReceiverDeferred.promise,
+      nextReceiver,
       this,
       () => closedDeferred.resolve(null)
     );
@@ -48,7 +55,7 @@ export class NextOverPromise<T = any> implements Next<T> {
   }
 
   /**
-   * Registers a success or a failure handler.
+   * Returns a new instance and registers a success or a failure handler.
    *
    * If a value is returned which is determined as the next request via {@link NextOverPromise.isNext}
    * then the value will be digested by the registered handler and the end result will be passed on.
@@ -84,6 +91,25 @@ export class NextOverPromise<T = any> implements Next<T> {
   }
 
   /**
+   * Returns a new instance which
+   * multicasts its end result among the registed consumers.
+   *
+   * This method returns a clone of the original instance
+   * whose methods do not take effect on the original instance.
+   *
+   * @see {@link NextOverPromise.toPromise}
+   */
+  public share() {
+    if (this.sharedResultPromise) {
+      return this;
+    }
+
+    const clone = this.lift<T>();
+    clone.sharedResultPromise = clone.toPromise();
+    return clone;
+  }
+
+  /**
    * Registers the receiver to be used to digest the requests.
    *
    * @desc It does not start an execution unless
@@ -106,13 +132,13 @@ export class NextOverPromise<T = any> implements Next<T> {
    *
    * Used by {@link NextOverPromise.chain}.
    */
-  protected lift<R>(operator: Operator<T, R>): this {
+  protected lift<R>(operator?: Operator<T, R>): this {
     // create new instance from the top-most prototype
     // to support derived classes
     const clone: this = Object.create(Object.getPrototypeOf(this));
     clone.nextReceiverDeferred = new Deferred<NextReceiver<T>>();
     clone.hasReceiver = false;
-    clone.operator = operator;
+    clone.operator = operator || this.operator;
 
     return clone;
   }

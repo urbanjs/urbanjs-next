@@ -23,19 +23,52 @@ describe('unit tests', () => {
       });
 
       it('starts a new execution per invocation (once receiver is given)', async () => {
-        const produceNextMock: SinonSpy = spy(next.produceNext);
-        next.produceNext = produceNextMock;
-
-        next.produce((observer: Observer<number>) => {
+        const receiver: SinonSpy = spy((observer: Observer<number>) => {
           observer.next(1);
           observer.complete();
         });
 
+        next.produce(receiver);
+
         await next.toPromise();
         await next.toPromise();
         await next.toPromise();
 
-        expect.equal(produceNextMock.calledThrice, true);
+        expect.equal(receiver.calledThrice, true);
+      });
+
+      describe('when instance is shared (.share)', () => {
+        beforeEach(() => {
+          next = next.share();
+        });
+
+        it('multicasts its end result', async () => {
+          // use a reference type
+          const value = {};
+
+          next.produce((observer: Observer<object>) => {
+            observer.next(value);
+            observer.complete();
+          });
+
+          expect.strictEqual(await next.toPromise(), value);
+          expect.strictEqual(await next.toPromise(), value);
+        });
+
+        it('does not start a new execution per invocation', async () => {
+          const receiver: SinonSpy = spy((observer: Observer<number>) => {
+            observer.next(1);
+            observer.complete();
+          });
+
+          next.produce(receiver);
+
+          await next.toPromise();
+          await next.toPromise();
+          await next.toPromise();
+
+          expect.equal(receiver.calledOnce, true);
+        });
       });
 
       describe('when instance is not completed (observer.complete)', () => {
@@ -68,6 +101,29 @@ describe('unit tests', () => {
           });
 
           expect.equal(await next.toPromise(), 1);
+        });
+      });
+    });
+
+    describe('.share()', () => {
+      it('returns a clone', () => {
+        expect.equal(next.share() instanceof NextOverPromise, true);
+        expect.notStrictEqual(next.share(), next);
+      });
+
+      it('sets the shared result promise', () => {
+        expect.equal(typeof next.sharedResultPromise, 'undefined');
+        const clone = next.share();
+        expect.equal(clone.sharedResultPromise instanceof Promise, true);
+      });
+
+      describe('when instance is shared', () => {
+        beforeEach(() => {
+          next = next.share();
+        });
+
+        it('does nothing', () => {
+          expect.strictEqual(next.share(), next);
         });
       });
     });
@@ -214,10 +270,59 @@ describe('unit tests', () => {
 
     describe('.lift()', () => {
       it('clones the current instance', () => {
-        const clone = next.lift(noop);
-        expect.strictEqual(clone.operator, noop);
+        const clone = next.lift();
+        expect.equal(clone.hasReceiver, false);
         expect.equal(clone.nextReceiverDeferred instanceof Deferred, true);
         expect.notStrictEqual(clone.nextReceiverDeferred, next.nextReceiverDeferred);
+      });
+
+      describe('when operator was set previously', () => {
+        beforeEach(() => {
+          next = next.lift(noop);
+          expect.strictEqual(next.operator, noop);
+        });
+
+        describe('and operator is not given', () => {
+          it('sets the previously registered operator', () => {
+            const clone = next.lift();
+            expect.strictEqual(clone.operator, noop);
+          });
+        });
+
+        describe('and operator is given', () => {
+          it('sets the given operator', () => {
+            const operator = () => null;
+            const clone = next.lift(operator);
+            expect.strictEqual(clone.operator, operator);
+          });
+        });
+      });
+
+      describe('when receiver is set', () => {
+        beforeEach(async () => {
+          next.produce(noop);
+          expect.equal(next.hasReceiver, true);
+
+          await next.nextReceiverDeferred;
+        });
+
+        it('clones the current instance with default values', () => {
+          const clone = next.lift();
+          expect.equal(clone.hasReceiver, false);
+          expect.equal(clone.nextReceiverDeferred instanceof Deferred, true);
+          expect.notStrictEqual(clone.nextReceiverDeferred, next.nextReceiverDeferred);
+        });
+      });
+
+      describe('when instance is shared (.share)', () => {
+        beforeEach(() => {
+          next = next.share();
+        });
+
+        it('clones the current instance without being shared', () => {
+          const clone = next.lift();
+          expect.equal(typeof clone.sharedResultPromise, 'undefined');
+        });
       });
 
       describe('when derived class is the instance', () => {
